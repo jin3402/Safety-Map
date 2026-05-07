@@ -30,7 +30,6 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // IndexedStack을 쓰면 탭 이동 시 지도 상태가 초기화되지 않고 유지됩니다.
       body: IndexedStack(
         index: _selectedIndex,
         children: _screens,

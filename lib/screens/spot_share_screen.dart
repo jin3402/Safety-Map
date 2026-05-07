@@ -13,7 +13,6 @@ class SpotShareScreen extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          // 배경, 이미지, 텍스트 등 기존 UI 코드 유지...
 
           // 하단 파란색 배경
           Positioned(
@@ -26,9 +25,8 @@ class SpotShareScreen extends StatelessWidget {
             ),
           ),
 
-          // ... (중간 이미지 및 텍스트 코드는 기존과 동일하게 유지) ...
-
-          // 위치 공유 중지 버튼 (BottomBar 때문에 가려지지 않도록 위치 조정 필요)
+        
+          // 위치 공유 중지 버튼 
           Positioned(
             left: 0,
             bottom: 20, // MainScreen의 BottomBar 높이를 고려하지 않아도 됨 (Scaffold body 안이므로)
@@ -50,8 +48,6 @@ class SpotShareScreen extends StatelessWidget {
               ),
             ),
           ),
-
-          // [삭제됨] 하단 네비게이션 바 코드 전체 삭제
         ],
       ),
     );

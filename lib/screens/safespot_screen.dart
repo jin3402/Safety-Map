@@ -16,7 +16,7 @@ class SafeSpotScreen extends StatefulWidget {
 }
 
 class _SafeSpotScreenState extends State<SafeSpotScreen> {
-  // ... (기존 변수 및 로직은 동일, 하단 바 관련 변수만 삭제)
+  // 기존 변수 및 로직은 동일, 하단 바 관련 변수만 삭제
   final Completer<GoogleMapController> _controller = Completer();
   GoogleMapController? _mapController;
   final Set<Marker> _markers = {};
@@ -36,35 +36,34 @@ class _SafeSpotScreenState extends State<SafeSpotScreen> {
     _requestLocationPermission();
   }
 
-  // ... (중간 위치 권한 및 API 로직은 기존 코드 그대로 유지하세요. 너무 길어서 생략합니다.) ...
-  // ... (_requestLocationPermission, _determinePosition, _searchNearbyFacility 등 그대로 사용) ...
+  
 
   Future<void> _requestLocationPermission() async {
-    // (기존 코드 유지)
+  
     _determinePosition();
   }
   Future<void> _determinePosition() async {
-    // (기존 코드 유지)
+    
   }
   void _addCurrentMarker() {
-    // (기존 코드 유지)
+    
   }
   Future<void> _searchNearbyFacility(String facilityType) async {
     // (기존 코드 유지 - dotenv 키 사용 부분 포함)
   }
   double _getMarkerColor(String facilityType) {
-    // (기존 코드 유지)
+    
     return BitmapDescriptor.hueRed; // 예시
   }
   String _getApiKey() {
-    // (기존 코드 유지)
+    
     return dotenv.env['GOOGLE_MAPS_API_KEY'] ?? "";
   }
   void _showEmergencyOptions() {
-    // (기존 코드 유지)
+    
   }
   void _copyToClipboard(String text) {
-    // (기존 코드 유지)
+    
   }
 
 
@@ -72,7 +71,7 @@ class _SafeSpotScreenState extends State<SafeSpotScreen> {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
 
-    // 여기도 하단 바(Stack -> Positioned) 제거
+    
     return Scaffold(
       body: Column(
         children: [

@@ -11,8 +11,8 @@ class EmergencyContactScreen extends StatelessWidget {
       path: phoneNumber,
     );
 
-    // launchUrl은 기본적으로 '다이얼 화면'까지만 이동합니다.
-    // 안드로이드/iOS 정책상 사용자가 직접 통화 버튼을 눌러야 연결됩니다.
+    // launchUrl은 기본적으로 '다이얼 화면'까지만 
+    // 안드로이드/iOS 정책상 사용자가 직접 통화 버튼을 눌러야 연결됨
     if (await canLaunchUrl(launchUri)) {
       await launchUrl(launchUri);
     } else {
