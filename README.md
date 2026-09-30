@@ -1,74 +1,85 @@
-# 📍 Safety-Map (안전한 길찾기 및 안심 귀가 서비스)
+# SafeWay (Safety-Map)
 
-> "사용자의 안전한 이동을 보장하고, 위급 상황 시 즉각적인 대응을 돕는 크로스 플랫폼 애플리케이션"
+늦은 귀가나 낯선 길에서 쓰는 안전 지도 앱을 목표로 만든 Flutter 앱입니다. 현재 위치를 지도에 표시하고, 긴급 전화(112·1366·119) 연결과 자주 가는 장소 저장을 제공합니다.
 
-'Safety-Map'는 구글 맵 기반의 실시간 위치 추적과 긴급 구조 요청 기능을 통합하여, 늦은 밤 귀가하거나 낯선 길을 갈 때 사용자의 안전을 지켜주는 서비스입니다. 
+- 상태: 지도·긴급 연락처·즐겨찾기는 동작하고, 로그인은 서버 없이 입력 형식만 확인합니다. 주변 안전시설 검색·비상벨·위치 공유는 화면만 있고 구현되지 않았습니다(아래 "한계").
+- 대상: Android·iOS. 웹 빌드는 되지만 웹용 지도 키 설정이 없어 지도는 뜨지 않습니다.
 
-<br>
+## 화면
 
-## 📱 Screen Preview 스크린샷 이미지 
+<img width="200" alt="Image" src="https://github.com/user-attachments/assets/1420e589-c0b1-4842-b11b-c7311cd27f4f" />
+<img width="200" alt="Image" src="https://github.com/user-attachments/assets/066499eb-03f3-45d5-bd5a-d0609e094a9d" />
+<img width="200" alt="Image" src="https://github.com/user-attachments/assets/ebbfd41a-b152-4c04-bf0e-bc1fec2ca78f" />
+<img width="200" alt="Image" src="https://github.com/user-attachments/assets/7827e70a-170e-4e42-a0b6-1deeb7bab822" />
 
-<img width="86" height="191" alt="Image" src="https://github.com/user-attachments/assets/1420e589-c0b1-4842-b11b-c7311cd27f4f" />
-<img width="81" height="187" alt="Image" src="https://github.com/user-attachments/assets/066499eb-03f3-45d5-bd5a-d0609e094a9d" />
-<img width="84" height="191" alt="Image" src="https://github.com/user-attachments/assets/ebbfd41a-b152-4c04-bf0e-bc1fec2ca78f" />
-<img width="103" height="197" alt="Image" src="https://github.com/user-attachments/assets/7827e70a-170e-4e42-a0b6-1deeb7bab822" />
+## 주요 기능
 
-<br>
+- 스플래시 → 로그인·회원가입(입력 검증) → 하단 탭 4개(설정·안전시설·홈·공유)
+- 홈: Google 지도, 위치 권한 요청 후 현재 위치 마커와 카메라 이동
+- 설정 → 긴급 연락처: 112·여성긴급전화 1366·119 카드를 누르면 전화 앱이 번호가 입력된 상태로 열림
+- 설정 → 즐겨찾기: 집·직장 주소를 기기(SharedPreferences)에 저장
+- 설정 → 개인정보 처리방침, 로그아웃
 
-## ✨ Key Features (주요 기능)
+## 기술 스택
 
-* <<실시간 안전 지도 (Safety Map)>>
-  * `Maps_flutter`와 `geolocator`를 활용하여 사용자의 실시간 위치를 추적합니다.
-  * 주변의 안전 스팟(경찰서,소방서 등) 및 위험 구역을 지도 상에 시각화하여 제공합니다.
-* **🚨 원터치 긴급 호출 (Quick SOS)**
-  * 위급 상황 발생 시 단 한 번의 터치로 작동합니다.
-  * `url_launcher`를 통해 사전에 등록된 비상 연락처 및 112/119로 즉시 전화 연결 및 위치 메시지를 전송합니다.
-* **⚙️ 사용자 맞춤 설정 (Custom Settings)**
-  * `shared_preferences`를 활용해 개인별 비상 연락망과 앱 알림 설정을 기기 로컬에 안전하게 저장합니다.
+Flutter 3.35 (Dart 3.9), `google_maps_flutter`, `geolocator`, `url_launcher`, `shared_preferences`, `flutter_test`
 
-<br>
+## 문제와 해결
 
-## 🛠 Tech Stack (기술 스택)
+**1. 저장소를 새로 받으면 빌드·테스트가 실패**
+`pubspec.yaml`이 `.env`를 Flutter 에셋으로 등록했는데 `.env`는 `.gitignore` 대상이라, `flutter test`·`flutter build`가 "No file or variants found for asset: .env"로 멈췄습니다. 에셋으로 넣으면 `.env` 파일이 앱 안에 그대로 들어가는 문제도 있었습니다. Dart 코드는 키를 쓰지 않아 에셋 등록과 `flutter_dotenv`를 없애고, 키는 플랫폼 빌드 설정으로만 넘깁니다.
+관련: `pubspec.yaml`, `android/app/build.gradle.kts`
 
-* Framework:** Flutter (Dart >= 3.4.3)
-* Map & Location:** Google Maps API, `geolocator`
-* Network & Storage:** REST API (`http`), `shared_preferences`
-* **System & Security:** `flutter_dotenv`, `permission_handler`
+**2. iOS에서 지도 API 키가 전달되지 않던 구조**
+`AppDelegate`가 앱 번들 루트에서 `.env`를 찾았지만 Xcode 프로젝트에는 `.env`가 없고 Flutter 에셋은 다른 경로에 들어가서, 키를 읽을 수 없었습니다. `Secrets.xcconfig` → `Info.plist`(`GMSApiKey`) → `AppDelegate` 순서로 바꿨습니다. 이 환경에 Xcode가 없어 iOS 빌드는 확인하지 못했습니다.
+관련: `ios/Flutter/*.xcconfig`, `ios/Runner/Info.plist`, `ios/Runner/AppDelegate.swift`
 
-<br>
+**3. 화면을 떠난 뒤 늦게 실행되는 화면 전환**
+로그인은 1초, 회원가입은 2초 뒤 `Future.delayed`에서 화면을 바꾸는데, 그 사이 뒤로 가면 이미 사라진 `context`로 `Navigator`를 찾다가 예외가 났습니다. 이동 직전에 `mounted`를 확인하고, 이 상황을 재현하는 위젯 테스트를 추가했습니다.
+관련: `lib/screens/login_screen.dart`, `test/auth_flow_test.dart`
 
-## 🏗 Architecture & Highlights (개발 주안점)
+**4. 위치가 지도보다 먼저 오면 카메라가 움직이지 않음**
+현재 위치를 받은 시점에 지도 컨트롤러가 아직 없으면 카메라 이동이 건너뛰어져, 마커가 화면 밖에 남을 수 있었습니다. 지도가 만들어질 때 이미 받은 위치로 옮기도록 했습니다.
+관련: `lib/screens/home_screen.dart`
 
-**1. 방어적 프로그래밍 (Defensive Programming)**
-* 보안을 위해 `.env` 파일(API Key 보관)을 Git에서 제외하여 관리하고 있습니다.
-* 타 개발 환경에서 `.env` 파일 누락 시 앱이 강제 종료되는 현상을 방지하기 위해, 초기화 단계(`main.dart`)에 `try-catch` 예외 처리를 구현하여 안정성을 높였습니다.
+## 구조
 
-**2. 유지보수를 고려한 라우팅 설계**
-* 화면 전환을 하드코딩하지 않고, Named Route 방식을 채택하여 라우팅 로직을 중앙 집중화했습니다. (`/splash`, `/login`, `/home` 등)
+```text
+lib/
+├── main.dart               # 라우트: /splash, /login, /signup, /home
+├── screens/
+│   ├── main_screen.dart    # 하단 탭 (IndexedStack)
+│   ├── home_screen.dart    # 지도 + 현재 위치
+│   ├── safespot_screen.dart, spot_share_screen.dart
+│   ├── settings_screen.dart → favorites / emergency_contact / privacy_policy
+│   └── splash / login / signup
+└── widgets/logo_placeholder.dart
+test/                       # 로그인·회원가입, 즐겨찾기, 긴급 전화, 로그아웃 흐름
+```
 
-**3. Material 3 기반의 일관된 UI/UX**
-* 최신 Flutter 디자인 시스템인 `useMaterial3`를 적용했습니다.
-* 신뢰감을 주는 푸른색 계열(`#2567E8`)을 `seedColor`로 지정하여 앱 전반에 통일감 있는 브랜드 컬러를 부여했습니다.
+## 실행
 
-<br>
-
-## 🚀 Getting Started (실행 방법)
-
-본 프로젝트를 로컬 환경에서 실행하기 위한 가이드입니다.
-
-### 1. Prerequisites
-* Flutter SDK (버전 3.4.3 이상 권장)
-* Google Maps API Key
-
-### 2. Installation & Run
 ```bash
-# 1. 패키지 다운로드
-$ flutter pub get
+flutter pub get
+cp .env.example .env                                              # Android: GOOGLE_MAPS_API_KEY
+cp ios/Flutter/Secrets.xcconfig.example ios/Flutter/Secrets.xcconfig   # iOS: GOOGLE_MAPS_API_KEY
+flutter run
+flutter test
+flutter analyze
+```
 
-# 2. 환경변수 세팅 (필수)
-# 프로젝트 루트 경로에 .env 파일을 생성하고 아래 키를 입력하세요.
-# GOOGLE_MAPS_API_KEY=당신의_API_키
+## 환경변수
 
-# 3. 앱 실행 (macOS, Android, iOS, Web 지원)
-$ flutter run
-<<이상입니다>>
+| 이름 | 위치 | 용도 |
+|---|---|---|
+| `GOOGLE_MAPS_API_KEY` | `.env` (Android), `ios/Flutter/Secrets.xcconfig` (iOS) | Google Maps SDK 키 |
+
+두 파일 모두 `.gitignore` 대상입니다. 키는 앱 패키지명·번들 ID로 사용 제한을 걸어 두는 것을 권합니다.
+
+## 한계와 다음 단계
+
+- 안전시설 탭의 파출소·경찰서·해바라기센터 검색과 비상벨, 공유 탭의 위치 공유는 구현되지 않았습니다. 안전시설 함수들은 첫 커밋부터 비어 있었고, 지금은 버튼을 누르면 "준비 중" 안내를 보여줍니다.
+- 로그인·회원가입은 서버가 없어 형식만 맞으면 통과합니다.
+- 로고 자리는 외부 자리표시(placeholder) 이미지이고, 개인정보 처리방침의 연락처는 예시 값입니다.
+- 하단 탭이 `IndexedStack`이라 홈과 안전시설 탭의 지도 두 개가 앱 시작 시 함께 만들어집니다.
+- 지도·위치 화면은 플랫폼 플러그인이 필요해 위젯 테스트에서 제외했습니다.
