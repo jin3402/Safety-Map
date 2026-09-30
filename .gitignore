@@ -47,9 +47,10 @@ app.*.map.json
 # 환경 변수 및 API 키 (중요!)
 # ============================================================
 
-# 환경 변수 파일
+# 환경 변수 파일 (예시 파일은 커밋)
 .env
 .env.*
+!.env.example
 .env.local
 .env.development
 .env.production
