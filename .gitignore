@@ -18,8 +18,8 @@
 # 메타데이터
 /.metadata
 
-# IDE 설정 파일
-/.idea/
+# IDE 설정 파일 (하위 폴더에 생긴 것까지)
+.idea/
 /.vscode/
 *.iml
 *.ipr
