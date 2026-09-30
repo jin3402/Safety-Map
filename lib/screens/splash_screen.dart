@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'login_screen.dart';
-import 'signup_screen.dart';
+import '../widgets/logo_placeholder.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -35,18 +34,7 @@ class SplashScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   // 로고 이미지
-                  Container(
-                    width: 120,
-                    height: 120,
-                    decoration: const BoxDecoration(
-                      image: DecorationImage(
-                        image: NetworkImage(
-                          "https://via.placeholder.com/120x120?text=Logo",
-                        ),
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                  ),
+                  const LogoPlaceholder(size: 120),
                   const SizedBox(height: 30),
                   // SAFEWAY 로고 텍스트
                   const Column(

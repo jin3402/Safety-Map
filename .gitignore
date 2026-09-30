@@ -18,8 +18,8 @@
 # 메타데이터
 /.metadata
 
-# IDE 설정 파일
-/.idea/
+# IDE 설정 파일 (하위 폴더에 생긴 것까지)
+.idea/
 /.vscode/
 *.iml
 *.ipr
@@ -47,9 +47,10 @@ app.*.map.json
 # 환경 변수 및 API 키 (중요!)
 # ============================================================
 
-# 환경 변수 파일
+# 환경 변수 파일 (예시 파일은 커밋)
 .env
 .env.*
+!.env.example
 .env.local
 .env.development
 .env.production

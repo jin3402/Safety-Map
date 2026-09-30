@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'signup_screen.dart';
-import 'home_screen.dart';
+import '../widgets/logo_placeholder.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -32,6 +31,8 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
       Future.delayed(const Duration(seconds: 1), () {
+        // 1초 사이에 사용자가 화면을 떠났다면 이동하지 않아요.
+        if (!mounted) return;
         Navigator.pushReplacementNamed(context, '/home');
       });
     }
@@ -61,18 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     // 로고 이미지
-                    Container(
-                      width: 80,
-                      height: 80,
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                          image: NetworkImage(
-                            "https://via.placeholder.com/80x80?text=Logo",
-                          ),
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                    ),
+                    const LogoPlaceholder(size: 80),
                     const SizedBox(height: 20),
                     // SAFE MAP 텍스트 (전체 표시)
                     const Column(

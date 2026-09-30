@@ -46,6 +46,9 @@
     <key>UIApplicationSupportsIndirectInputEvents</key>
     <true/>
 
+    <key>GMSApiKey</key>
+    <string>$(GOOGLE_MAPS_API_KEY)</string>
+
     <key>NSLocationWhenInUseUsageDescription</key>
     <string>SafeWay 앱이 현재 위치를 사용하여 주변 안전시설을 찾습니다.</string>
 

@@ -4,12 +4,11 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.4.3 <4.0.0'
+  sdk: '>=3.9.0 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
-  flutter_dotenv: ^6.0.0
   cupertino_icons: ^1.0.8
   shared_preferences: ^2.0.1
 
@@ -18,15 +17,14 @@ dependencies:
   google_maps_flutter: ^2.5.0
   geolocator: ^14.0.2
   url_launcher: ^6.1.14
-  permission_handler: ^12.0.1
-  http: ^1.1.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+  # 테스트에서 전화 앱 실행(url_launcher)을 가짜로 바꾸는 데 써요.
+  plugin_platform_interface: ^2.1.8
+  url_launcher_platform_interface: ^2.3.2
 
 flutter:
   uses-material-design: true
-  assets:
-    - .env

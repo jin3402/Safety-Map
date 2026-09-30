@@ -9,18 +9,10 @@ import GoogleMaps
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
 
-    // .env 파일에서 API 키 읽기
-    if let envPath = Bundle.main.path(forResource: ".env", ofType: nil) {
-      if let envContent = try? String(contentsOfFile: envPath, encoding: .utf8) {
-        for line in envContent.split(separator: "\n") {
-          let trimmed = String(line).trimmingCharacters(in: .whitespaces)
-          if trimmed.hasPrefix("GOOGLE_MAPS_API_KEY=") {
-            let apiKey = String(trimmed.dropFirst("GOOGLE_MAPS_API_KEY=".count))
-            GMSServices.provideAPIKey(apiKey)
-            break
-          }
-        }
-      }
+    // ios/Flutter/Secrets.xcconfig의 GOOGLE_MAPS_API_KEY가 Info.plist의 GMSApiKey로 들어와요.
+    if let apiKey = Bundle.main.object(forInfoDictionaryKey: "GMSApiKey") as? String,
+       !apiKey.isEmpty {
+      GMSServices.provideAPIKey(apiKey)
     }
 
     GeneratedPluginRegistrant.register(with: self)
