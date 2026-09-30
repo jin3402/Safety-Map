@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
@@ -11,7 +10,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final Completer<GoogleMapController> _controller = Completer();
   GoogleMapController? _mapController;
   final Set<Marker> _markers = {};
 
@@ -30,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _determinePosition() async {
-    bool serviceEnabled;
+    final bool serviceEnabled;
     LocationPermission permission;
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
@@ -54,21 +52,22 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     try {
-      Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
+      final position = await Geolocator.getCurrentPosition(
+        locationSettings: const LocationSettings(accuracy: LocationAccuracy.high),
       );
 
       // 마운트 되었는지 확인 후 setState 호출 (안전성 강화)
       if (!mounted) return;
 
+      final current = LatLng(position.latitude, position.longitude);
       setState(() {
-        _currentPosition = LatLng(position.latitude, position.longitude);
-        _addMarker();
+        _currentPosition = current;
+        _markers
+          ..clear()
+          ..add(_currentLocationMarker(current));
         _isLocationLoading = false;
       });
-      _mapController?.animateCamera(
-        CameraUpdate.newLatLngZoom(_currentPosition!, 15.0),
-      );
+      _mapController?.animateCamera(CameraUpdate.newLatLngZoom(current, 15.0));
     } catch (e) {
       _setLoading(false);
     }
@@ -78,20 +77,13 @@ class _HomeScreenState extends State<HomeScreen> {
     if (mounted) setState(() => _isLocationLoading = value);
   }
 
-  void _addMarker() {
-    _markers.clear();
-    if (_currentPosition != null) {
-      setState(() {
-        _markers.add(
-          Marker(
-            markerId: const MarkerId('blueDot'),
-            position: _currentPosition!,
-            infoWindow: const InfoWindow(title: '현재 위치'),
-            icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-          ),
-        );
-      });
-    }
+  Marker _currentLocationMarker(LatLng position) {
+    return Marker(
+      markerId: const MarkerId('blueDot'),
+      position: position,
+      infoWindow: const InfoWindow(title: '현재 위치'),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+    );
   }
 
   @override
@@ -116,10 +108,12 @@ class _HomeScreenState extends State<HomeScreen> {
             mapType: MapType.normal,
             initialCameraPosition: _initialCameraPosition,
             onMapCreated: (GoogleMapController controller) {
-              if (!_controller.isCompleted) {
-                _controller.complete(controller);
-              }
               _mapController = controller;
+              // 지도가 늦게 뜨면 이미 구한 현재 위치로 바로 옮겨요.
+              final current = _currentPosition;
+              if (current != null) {
+                controller.moveCamera(CameraUpdate.newLatLngZoom(current, 15.0));
+              }
             },
             markers: _markers,
             myLocationButtonEnabled: false,
