@@ -32,6 +32,8 @@ class _SignupScreenState extends State<SignupScreen> {
       );
 
       Future.delayed(const Duration(seconds: 2), () {
+        // 2초 사이에 사용자가 화면을 떠났다면 이동하지 않아요.
+        if (!mounted) return;
         Navigator.pushReplacementNamed(context, '/login');
       });
     }

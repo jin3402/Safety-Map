@@ -31,6 +31,8 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
       Future.delayed(const Duration(seconds: 1), () {
+        // 1초 사이에 사용자가 화면을 떠났다면 이동하지 않아요.
+        if (!mounted) return;
         Navigator.pushReplacementNamed(context, '/home');
       });
     }
